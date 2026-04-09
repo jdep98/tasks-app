@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, inject, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { 
+import {
   IonContent, IonIcon, IonButton, IonHeader, IonToolbar, IonTitle,
   IonItem, IonLabel, IonInput, IonSelect, IonSelectOption, IonTextarea,
   IonToggle, IonButtons, ModalController, IonDatetime, IonDatetimeButton, IonModal
@@ -19,10 +19,10 @@ import { FirebaseConfigService } from '../../../services/firebase-config.service
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    CommonModule, FormsModule, 
+    CommonModule, FormsModule,
     IonContent, IonIcon, IonButton, IonHeader, IonToolbar, IonTitle,
-    IonItem, IonLabel, IonInput, IonSelect, IonSelectOption, IonTextarea,
-    IonToggle, IonButtons, IonDatetime, IonDatetimeButton, IonModal
+    IonItem, IonLabel, IonSelect, IonSelectOption, IonTextarea,
+    IonToggle, IonButtons, IonDatetime, IonModal
   ],
 })
 export class CreateTaskModalComponent implements OnInit {
@@ -39,7 +39,7 @@ export class CreateTaskModalComponent implements OnInit {
 
   // Variables para Datetime
   public today: string = new Date().toISOString().split('T')[0]; // ej: '2024-05-12' para [min]
-  public dateValue: string = new Date().toISOString(); 
+  public dateValue: string = new Date().toISOString();
   public timeValue: string = new Date().toISOString();
 
   get formattedDateUI(): string {
@@ -59,7 +59,7 @@ export class CreateTaskModalComponent implements OnInit {
       this.title = this.task.title;
       this.categoryId = this.task.categoryId;
       this.isImportant = this.task.isImportant || false;
-      
+
       let dateObj = new Date(this.task.date);
       if (isNaN(dateObj.getTime())) {
         dateObj = new Date(this.task.createdAt);
@@ -100,11 +100,11 @@ export class CreateTaskModalComponent implements OnInit {
       });
     } else {
       this.taskService.createTask(
-        this.title, 
-        '', 
-        this.dateValue, 
-        formattedTime, 
-        this.categoryId, 
+        this.title,
+        '',
+        this.dateValue,
+        formattedTime,
+        this.categoryId,
         this.isImportant
       );
     }

@@ -6,15 +6,15 @@
 
 <ion-content [fullscreen]="true" class="main-bg">
   <div class="hero-background">
-    <h1 class="greeting" (click)="changeName()">Hola, {{ userName() }}</h1>
+    <h1 class="greeting">Hola, {{ storageService.userName() }}</h1>
 
     <div class="categories-slider">
       @for (category of categoryService.categories(); track category.id) {
-      <div class="category-card">
-        <ion-icon [name]="category.icon" [style.color]="category.color" class="cat-icon"></ion-icon>
-        <h3>{{ category.name }}</h3>
-        <p>{{ taskService.getTaskCountByCategory(category.id) }} Ítems</p>
-      </div>
+        <div class="category-card">
+          <ion-icon [name]="category.icon" [style.color]="category.color" class="cat-icon"></ion-icon>
+          <h3>{{ category.name }}</h3>
+          <p>{{ taskService.getTaskCountByCategory(category.id) }} Ítems</p>
+        </div>
       }
     </div>
   </div>

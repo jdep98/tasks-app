@@ -30,8 +30,7 @@ import { CreateTaskModalComponent } from './components/create-task-modal/create-
   imports: [
     CommonModule, FormsModule,
     IonHeader, IonToolbar, IonTitle, IonContent, IonIcon,
-    IonItem, IonLabel, IonCheckbox, IonList,
-    IonAvatar, IonImg, IonButton, IonMenuButton, IonButtons,
+    IonItem, IonLabel, IonList,
     IonNote, IonItemSliding, IonItemOptions, IonItemOption
   ],
 })
@@ -39,14 +38,14 @@ export class HomePage implements OnInit {
   public taskService = inject(TaskService);
   public categoryService = inject(CategoryService);
   public firebaseService = inject(FirebaseConfigService);
-  private storageService = inject(StorageService);
+  public storageService = inject(StorageService);
   private alertCtrl = inject(AlertController);
   private modalCtrl = inject(ModalController);
-  
+
   public selectedTimeline = signal('Semanal');
   public timelines = ['Hoy', 'Semanal', 'Mensual', 'Anual'];
-  
-  public userName = signal('Parsley');
+
+  public userName = this.storageService.userName;
 
   // Signal computado que reacciona a los cambios en tasks y en el filtro de línea de tiempo
   public filteredTasks = computed(() => {
@@ -101,39 +100,6 @@ export class HomePage implements OnInit {
   }
 
   ngOnInit() {
-    const storedName = this.storageService.getItem<string>('USER_NAME');
-    if (storedName) {
-      this.userName.set(storedName);
-    }
-  }
-
-  async changeName() {
-    const alert = await this.alertCtrl.create({
-      header: 'Tu Nombre',
-      message: '¿Cómo quieres que te llame la aplicación?',
-      inputs: [
-        {
-          name: 'name',
-          type: 'text',
-          placeholder: 'Escribe tu nombre',
-          value: this.userName() !== 'Parsley' ? this.userName() : ''
-        }
-      ],
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        { 
-          text: 'Guardar', 
-          handler: (data) => {
-            if (data && data.name && data.name.trim().length > 0) {
-              const newName = data.name.trim();
-              this.userName.set(newName);
-              this.storageService.setItem('USER_NAME', newName);
-            }
-          } 
-        }
-      ]
-    });
-    await alert.present();
   }
 
   toggleTimeline(timeline: string) {

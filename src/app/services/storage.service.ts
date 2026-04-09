@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
@@ -7,7 +7,23 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class StorageService {
   private readonly STORAGE_PREFIX = 'tasks_app_';
 
-  constructor() {}
+  public userName = signal('Parsley');
+
+  constructor() {
+    this.init();
+  }
+
+  private init() {
+    const storedName = this.getItem<string>('USER_NAME');
+    if (storedName) {
+      this.userName.set(storedName);
+    }
+  }
+
+  public setUserName(name: string) {
+    this.userName.set(name);
+    this.setItem('USER_NAME', name);
+  }
 
   /**
    * Obtener un valor del almacenamiento local

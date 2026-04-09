@@ -1,0 +1,139 @@
+@import '../../../../theme/variables.scss';
+
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+  margin: 10px 0 15px 0;
+}
+
+.subsection-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  margin: 15px 0 10px 0;
+}
+
+.category-form {
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  margin-bottom: 25px;
+  border: 1px solid #f0f0f0;
+}
+
+.animated-fadein {
+  animation: fadeInDown 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.info-item {
+  --background: #f8f9fc;
+  --border-radius: 15px;
+  --padding-start: 15px;
+  font-size: 15px;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.scroll-x {
+  display: flex;
+  overflow-x: auto;
+  padding-bottom: 15px;
+  gap: 15px;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+.color-dot, .icon-dot {
+  width: 45px;
+  height: 45px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  transition: transform 0.2s;
+  
+  &:active {
+    transform: scale(0.9);
+  }
+}
+
+.color-dot {
+  border: 3px solid transparent;
+  &.selected {
+    border-color: #333;
+    transform: scale(1.1);
+  }
+}
+
+.icon-dot {
+  background: #f8f9fc;
+  color: #999;
+  &.selected {
+    background: currentColor;
+    color: white !important; /* Forces the icon stroke to use background contrast (white) */
+    position: relative;
+    
+    ion-icon { 
+      color: white; 
+    }
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+
+  .save-btn {
+    --box-shadow: 0 4px 15px rgba(0, 204, 230, 0.3);
+  }
+}
+
+/* List Styles */
+.cat-sliding {
+  margin-bottom: 15px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+  background: white;
+}
+
+.cat-item {
+  --background: white;
+  --padding-start: 15px;
+  --padding-end: 15px;
+  --border-radius: 15px;
+  
+  .cat-avatar {
+    margin-right: 15px;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    border-radius: 12px;
+  }
+
+  h2 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  p {
+    font-size: 13px;
+    color: #999;
+    margin-top: 3px;
+  }
+}
