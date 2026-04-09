@@ -27,8 +27,8 @@ export class AppComponent {
   async openCreateTaskModal() {
     const modal = await this.modalCtrl.create({
       component: CreateTaskModalComponent,
-      breakpoints: [0, 0.75, 1],
-      initialBreakpoint: 0.75
+      breakpoints: [0, 0.9, 1],
+      initialBreakpoint: 0.9
     });
     return await modal.present();
   }

@@ -1,3 +1,14 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  ion-content {
+    flex: 1;
+    min-height: 0;
+  }
+}
+
 .form-container {
   margin-top: 20px;
 }
@@ -47,11 +58,9 @@
   margin-top: 20px;
 }
 
-.bottom-action {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  right: 20px;
+.btn-wrapper {
+  padding: 12px 20px 20px;
+  background: #f8f9fc;
 }
 
 .complete-btn {

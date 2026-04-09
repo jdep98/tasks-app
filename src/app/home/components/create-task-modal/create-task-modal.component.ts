@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, inject, Input, OnInit } from '@angu
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-  IonContent, IonIcon, IonButton, IonHeader, IonToolbar, IonTitle,
+  IonContent, IonIcon, IonButton, IonHeader, IonToolbar, IonTitle, IonFooter,
   IonItem, IonLabel, IonInput, IonSelect, IonSelectOption, IonTextarea,
   IonToggle, IonButtons, ModalController, IonDatetime, IonDatetimeButton, IonModal
 } from '@ionic/angular/standalone';

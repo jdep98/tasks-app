@@ -52,7 +52,7 @@
           <ion-icon name="star" color="warning" slot="end" class="important-star"></ion-icon>
           }
 
-          <ion-note slot="end" class="task-time">{{ task.time }}</ion-note>
+          <ion-note slot="end" class="task-time">{{ getTaskDateLabel(task) }}</ion-note>
         </ion-item>
 
         <ion-item-options side="end">

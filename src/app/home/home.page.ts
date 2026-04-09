@@ -42,7 +42,7 @@ export class HomePage implements OnInit {
   private alertCtrl = inject(AlertController);
   private modalCtrl = inject(ModalController);
 
-  public selectedTimeline = signal('Semanal');
+  public selectedTimeline = signal('Hoy');
   public timelines = ['Hoy', 'Semanal', 'Mensual', 'Anual'];
   public selectedCategory = signal<string | null>(null);
 
@@ -118,6 +118,23 @@ export class HomePage implements OnInit {
     } else {
       this.selectedCategory.set(categoryId);
     }
+  }
+
+  getTaskDateLabel(task: any): string {
+    let taskDate = new Date(task.date);
+    if (isNaN(taskDate.getTime())) {
+      taskDate = new Date(task.createdAt);
+    }
+
+    const formatters: Record<string, Intl.DateTimeFormatOptions> = {
+      'Hoy': { hour: '2-digit', minute: '2-digit' },
+      'Semanal': { hour: '2-digit', minute: '2-digit', weekday: 'short' },
+      'Mensual': { day: '2-digit', month: '2-digit' },
+      'Anual': { day: '2-digit', month: '2-digit', year: 'numeric' }
+    };
+
+    const options = formatters[this.selectedTimeline()] ?? formatters['Hoy'];
+    return new Intl.DateTimeFormat('es-ES', options).format(taskDate);
   }
 
   toggleTaskCompletion(taskId: string) {
