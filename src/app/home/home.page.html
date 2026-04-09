@@ -1,20 +1,12 @@
 <ion-header class="ion-no-border">
   <ion-toolbar class="hero-toolbar">
-    <ion-buttons slot="start">
-      <ion-button>
-        <ion-icon name="menu-outline" slot="icon-only" color="light"></ion-icon>
-      </ion-button>
-    </ion-buttons>
     <ion-title color="light" class="ion-text-center">Mis Tareas</ion-title>
-    <ion-avatar slot="end" class="header-avatar">
-      <div class="dummy-avatar"></div>
-    </ion-avatar>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="main-bg">
   <div class="hero-background">
-    <h1 class="greeting">Hola, Parsley</h1>
+    <h1 class="greeting" (click)="changeName()">Hola, {{ userName() }}</h1>
 
     <div class="categories-slider">
       @for (category of categoryService.categories(); track category.id) {
@@ -64,6 +56,9 @@
         </ion-item>
 
         <ion-item-options side="end">
+          <ion-item-option color="primary" (click)="editTask(task, slidingItem)">
+            <ion-icon slot="icon-only" name="create"></ion-icon>
+          </ion-item-option>
           <ion-item-option color="danger" (click)="deleteTask(task.id, slidingItem)">
             <ion-icon name="trash" slot="icon-only"></ion-icon>
           </ion-item-option>

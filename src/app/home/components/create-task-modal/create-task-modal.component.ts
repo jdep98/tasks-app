@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { 
@@ -25,11 +25,13 @@ import { FirebaseConfigService } from '../../../services/firebase-config.service
     IonToggle, IonButtons, IonDatetime, IonDatetimeButton, IonModal
   ],
 })
-export class CreateTaskModalComponent {
+export class CreateTaskModalComponent implements OnInit {
   private modalCtrl = inject(ModalController);
   private taskService = inject(TaskService);
   public categoryService = inject(CategoryService);
   public firebaseService = inject(FirebaseConfigService);
+
+  @Input() task?: any;
 
   public title: string = '';
   public categoryId: string = 'cat-shopping';
@@ -52,6 +54,32 @@ export class CreateTaskModalComponent {
     addIcons({ timeOutline, calendarOutline, starOutline, closeCircle });
   }
 
+  ngOnInit() {
+    if (this.task) {
+      this.title = this.task.title;
+      this.categoryId = this.task.categoryId;
+      this.isImportant = this.task.isImportant || false;
+      
+      let dateObj = new Date(this.task.date);
+      if (isNaN(dateObj.getTime())) {
+        dateObj = new Date(this.task.createdAt);
+      }
+      this.dateValue = dateObj.toISOString();
+
+      const fakeDate = new Date();
+      const timeParts = this.task.time.match(/(\d+):(\d+)\s*(am|pm)/i);
+      if (timeParts) {
+        let hours = parseInt(timeParts[1], 10);
+        let minutes = parseInt(timeParts[2], 10);
+        const ampm = timeParts[3].toLowerCase();
+        if (ampm === 'pm' && hours < 12) hours += 12;
+        if (ampm === 'am' && hours === 12) hours = 0;
+        fakeDate.setHours(hours, minutes, 0, 0);
+        this.timeValue = fakeDate.toISOString();
+      }
+    }
+  }
+
   cancel() {
     return this.modalCtrl.dismiss(null, 'cancel');
   }
@@ -62,14 +90,24 @@ export class CreateTaskModalComponent {
     const timeObj = new Date(this.timeValue);
     const formattedTime = timeObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-    this.taskService.createTask(
-      this.title, 
-      '', 
-      this.dateValue, // Guardar el valor ISO (YYYY-MM-DD...) puro para filtrado 
-      formattedTime, 
-      this.categoryId, 
-      this.isImportant
-    );
+    if (this.task) {
+      this.taskService.updateTask(this.task.id, {
+        title: this.title,
+        date: this.dateValue,
+        time: formattedTime,
+        categoryId: this.categoryId,
+        isImportant: this.isImportant
+      });
+    } else {
+      this.taskService.createTask(
+        this.title, 
+        '', 
+        this.dateValue, 
+        formattedTime, 
+        this.categoryId, 
+        this.isImportant
+      );
+    }
 
     return this.modalCtrl.dismiss(this.title, 'confirm');
   }
