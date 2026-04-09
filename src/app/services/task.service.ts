@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable, signal, computed } from '@angular/core';
 import { Task } from '../models/task.model';
 import { StorageService } from './storage.service';
 import { v4 as uuidv4 } from 'uuid';
@@ -9,59 +8,53 @@ import { v4 as uuidv4 } from 'uuid';
 })
 export class TaskService {
   private readonly TASKS_KEY = 'tasks';
-  private tasksSubject = new BehaviorSubject<Task[]>([]);
-  public tasks$: Observable<Task[]> = this.tasksSubject.asObservable();
+  
+  // Signal state
+  private state = signal<Task[]>([]);
+  public tasks = computed(() => this.state());
 
   constructor(private storageService: StorageService) {
     this.loadTasks();
   }
 
-  /**
-   * Cargar todas las tareas del almacenamiento
-   */
   private loadTasks(): void {
-    const tasks = this.storageService.getItem<Task[]>(this.TASKS_KEY, []);
-    this.tasksSubject.next(tasks || []);
+    let tasks = this.storageService.getItem<Task[]>(this.TASKS_KEY);
+    if (!tasks) {
+      tasks = [];
+      this.storageService.setItem(this.TASKS_KEY, tasks);
+    }
+    this.state.set(tasks);
   }
 
-  /**
-   * Obtener todas las tareas
-   */
-  getTasks(): Task[] {
-    return this.tasksSubject.value;
-  }
-
-  /**
-   * Obtener tareas por categoría
-   */
   getTasksByCategory(categoryId: string): Task[] {
-    return this.getTasks().filter(task => task.categoryId === categoryId);
+    return this.state().filter(task => task.categoryId === categoryId);
+  }
+  
+  getTaskCountByCategory(categoryId: string): number {
+    return this.getTasksByCategory(categoryId).length;
   }
 
-  /**
-   * Crear una nueva tarea
-   */
-  createTask(title: string, description: string = '', categoryId: string): Task {
+  createTask(title: string, description: string = '', date: string, time: string, categoryId: string, isImportant: boolean): Task {
     const task: Task = {
       id: uuidv4(),
       title,
       description,
+      date,
+      time,
       completed: false,
       categoryId,
+      isImportant,
       createdAt: new Date(),
       updatedAt: new Date()
     };
 
-    const tasks = [...this.getTasks(), task];
+    const tasks = [...this.state(), task];
     this.saveTasks(tasks);
     return task;
   }
 
-  /**
-   * Actualizar una tarea
-   */
   updateTask(id: string, changes: Partial<Task>): Task | null {
-    const tasks = this.getTasks();
+    const tasks = this.state();
     const index = tasks.findIndex(t => t.id === id);
 
     if (index === -1) return null;
@@ -69,46 +62,35 @@ export class TaskService {
     const updatedTask = {
       ...tasks[index],
       ...changes,
-      id: tasks[index].id, // No permitir cambiar ID
+      id: tasks[index].id,
       updatedAt: new Date()
     };
 
-    tasks[index] = updatedTask;
-    this.saveTasks(tasks);
+    const newTasks = [...tasks];
+    newTasks[index] = updatedTask;
+    this.saveTasks(newTasks);
     return updatedTask;
   }
 
-  /**
-   * Marcar una tarea como completada
-   */
   toggleTask(id: string): Task | null {
-    const task = this.getTasks().find(t => t.id === id);
+    const task = this.state().find(t => t.id === id);
     if (!task) return null;
     return this.updateTask(id, { completed: !task.completed });
   }
 
-  /**
-   * Eliminar una tarea
-   */
   deleteTask(id: string): boolean {
-    const tasks = this.getTasks().filter(t => t.id !== id);
+    const tasks = this.state().filter(t => t.id !== id);
     this.saveTasks(tasks);
     return true;
   }
 
-  /**
-   * Guardar tareas en el almacenamiento
-   */
   private saveTasks(tasks: Task[]): void {
     this.storageService.setItem(this.TASKS_KEY, tasks);
-    this.tasksSubject.next(tasks);
+    this.state.set(tasks);
   }
 
-  /**
-   * Eliminar todas las tareas de una categoría
-   */
   deleteTasksByCategory(categoryId: string): void {
-    const tasks = this.getTasks().filter(t => t.categoryId !== categoryId);
+    const tasks = this.state().filter(t => t.categoryId !== categoryId);
     this.saveTasks(tasks);
   }
 }

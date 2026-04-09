@@ -1,0 +1,63 @@
+.form-container {
+  margin-top: 20px;
+}
+
+.section-title {
+  color: #999;
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+.custom-textarea {
+  --background: white;
+  border: 1px solid var(--ion-color-primary);
+  border-radius: 12px;
+  --padding-start: 15px;
+  --padding-end: 15px;
+  --padding-top: 15px;
+  --padding-bottom: 15px;
+  margin-bottom: 25px;
+  font-size: 16px;
+  color: #333;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.info-item {
+  --background: transparent;
+  flex: 1;
+  font-size: 14px;
+  color: #666;
+  
+  ion-icon {
+    font-size: 20px;
+    margin-right: 10px;
+  }
+}
+
+.cat-select {
+  width: 100%;
+}
+
+.margin-top {
+  margin-top: 20px;
+}
+
+.bottom-action {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+}
+
+.complete-btn {
+  height: 50px;
+  --box-shadow: 0 8px 25px rgba(0, 204, 230, 0.4);
+  font-weight: 600;
+  text-transform: none;
+  font-size: 16px;
+}

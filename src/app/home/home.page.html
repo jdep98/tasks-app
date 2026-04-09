@@ -1,20 +1,75 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+<ion-header class="ion-no-border">
+  <ion-toolbar class="hero-toolbar">
+    <ion-buttons slot="start">
+      <ion-button>
+        <ion-icon name="menu-outline" slot="icon-only" color="light"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title color="light" class="ion-text-center">Mis Tareas</ion-title>
+    <ion-avatar slot="end" class="header-avatar">
+      <div class="dummy-avatar"></div>
+    </ion-avatar>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="main-bg">
+  <div class="hero-background">
+    <h1 class="greeting">Hola, Parsley</h1>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+    <div class="categories-slider">
+      @for (category of categoryService.categories(); track category.id) {
+      <div class="category-card">
+        <ion-icon [name]="category.icon" [style.color]="category.color" class="cat-icon"></ion-icon>
+        <h3>{{ category.name }}</h3>
+        <p>{{ taskService.getTaskCountByCategory(category.id) }} Ítems</p>
+      </div>
+      }
+    </div>
+  </div>
+
+  <div class="content-body">
+    <div class="timeline-tabs">
+      @for (timeline of timelines; track timeline) {
+      <div class="timeline-tab" [class.active]="selectedTimeline() === timeline" (click)="toggleTimeline(timeline)">
+        {{ timeline }}
+        @if (selectedTimeline() === timeline) {
+        <div class="active-dot"></div>
+        }
+      </div>
+      }
+    </div>
+
+    <ion-list class="task-list" lines="none">
+      @for (task of filteredTasks(); track task.id) {
+      <ion-item-sliding class="task-sliding" #slidingItem>
+        <ion-item class="task-item">
+          <div slot="start" class="task-checkbox" [class.checked]="task.completed"
+            (click)="toggleTaskCompletion(task.id)">
+            @if (task.completed) {
+            <ion-icon name="checkmark-circle" color="primary"></ion-icon>
+            } @else {
+            <ion-icon name="ellipse-outline" color="medium"></ion-icon>
+            }
+          </div>
+
+          <ion-label [class.task-done]="task.completed">
+            <h2>{{ task.title }}</h2>
+          </ion-label>
+
+          @if (task.isImportant && firebaseService.enableImportantMarker()) {
+          <ion-icon name="star" color="warning" slot="end" class="important-star"></ion-icon>
+          }
+
+          <ion-note slot="end" class="task-time">{{ task.time }}</ion-note>
+        </ion-item>
+
+        <ion-item-options side="end">
+          <ion-item-option color="danger" (click)="deleteTask(task.id, slidingItem)">
+            <ion-icon name="trash" slot="icon-only"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+      }
+    </ion-list>
   </div>
 </ion-content>

@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable, signal, computed } from '@angular/core';
 import { Category } from '../models/task.model';
 import { StorageService } from './storage.service';
 import { v4 as uuidv4 } from 'uuid';
@@ -9,49 +8,40 @@ import { v4 as uuidv4 } from 'uuid';
 })
 export class CategoryService {
   private readonly CATEGORIES_KEY = 'categories';
+  
+  // Default categories matching Figma design
   private readonly DEFAULT_CATEGORIES: Category[] = [
-    { id: 'default-personal', name: 'Personal', color: '#FF6B6B', icon: 'person', createdAt: new Date(), updatedAt: new Date() },
-    { id: 'default-work', name: 'Trabajo', color: '#4ECDC4', icon: 'briefcase', createdAt: new Date(), updatedAt: new Date() },
-    { id: 'default-shopping', name: 'Compras', color: '#FFE66D', icon: 'cart', createdAt: new Date(), updatedAt: new Date() }
+    { id: 'cat-shopping', name: 'Compras', color: '#0ce7e7', icon: 'cart-outline', createdAt: new Date(), updatedAt: new Date() },
+    { id: 'cat-work', name: 'Trabajo', color: '#6666ff', icon: 'calculator-outline', createdAt: new Date(), updatedAt: new Date() },
+    { id: 'cat-hobbies', name: 'Pasatiempos', color: '#ff6666', icon: 'color-palette-outline', createdAt: new Date(), updatedAt: new Date() },
+    { id: 'cat-family', name: 'Cena Familiar', color: '#6666ff', icon: 'restaurant-outline', createdAt: new Date(), updatedAt: new Date() },
+    { id: 'cat-gaming', name: 'Videojuegos', color: '#ff6666', icon: 'game-controller-outline', createdAt: new Date(), updatedAt: new Date() },
+    { id: 'cat-swimming', name: 'Natación', color: '#9933ff', icon: 'water-outline', createdAt: new Date(), updatedAt: new Date() },
+    { id: 'cat-entertainment', name: 'Entretenimiento', color: '#ff33cc', icon: 'musical-notes-outline', createdAt: new Date(), updatedAt: new Date() }
   ];
 
-  private categoriesSubject = new BehaviorSubject<Category[]>([]);
-  public categories$: Observable<Category[]> = this.categoriesSubject.asObservable();
+  // Signal state
+  private state = signal<Category[]>([]);
+  public categories = computed(() => this.state());
 
   constructor(private storageService: StorageService) {
     this.loadCategories();
   }
 
-  /**
-   * Cargar categorías del almacenamiento o usar las predeterminadas
-   */
   private loadCategories(): void {
     let categories = this.storageService.getItem<Category[]>(this.CATEGORIES_KEY);
     if (!categories || categories.length === 0) {
       categories = this.DEFAULT_CATEGORIES;
       this.storageService.setItem(this.CATEGORIES_KEY, categories);
     }
-    this.categoriesSubject.next(categories);
+    this.state.set(categories);
   }
 
-  /**
-   * Obtener todas las categorías
-   */
-  getCategories(): Category[] {
-    return this.categoriesSubject.value;
-  }
-
-  /**
-   * Obtener una categoría por ID
-   */
   getCategoryById(id: string): Category | null {
-    return this.getCategories().find(c => c.id === id) || null;
+    return this.state().find(c => c.id === id) || null;
   }
 
-  /**
-   * Crear una nueva categoría
-   */
-  createCategory(name: string, color: string = '#999999', icon: string = 'folder'): Category {
+  createCategory(name: string, color: string = '#0ce7e7', icon: string = 'folder-outline'): Category {
     const category: Category = {
       id: uuidv4(),
       name,
@@ -61,16 +51,13 @@ export class CategoryService {
       updatedAt: new Date()
     };
 
-    const categories = [...this.getCategories(), category];
+    const categories = [...this.state(), category];
     this.saveCategories(categories);
     return category;
   }
 
-  /**
-   * Actualizar una categoría
-   */
   updateCategory(id: string, changes: Partial<Category>): Category | null {
-    const categories = this.getCategories();
+    const categories = this.state();
     const index = categories.findIndex(c => c.id === id);
 
     if (index === -1) return null;
@@ -78,34 +65,24 @@ export class CategoryService {
     const updatedCategory = {
       ...categories[index],
       ...changes,
-      id: categories[index].id, // No permitir cambiar ID
+      id: categories[index].id,
       updatedAt: new Date()
     };
 
-    categories[index] = updatedCategory;
-    this.saveCategories(categories);
+    const newCategories = [...categories];
+    newCategories[index] = updatedCategory;
+    this.saveCategories(newCategories);
     return updatedCategory;
   }
 
-  /**
-   * Eliminar una categoría
-   */
   deleteCategory(id: string): boolean {
-    // No permitir eliminar categorías predeterminadas
-    if (id.startsWith('default-')) {
-      return false;
-    }
-
-    const categories = this.getCategories().filter(c => c.id !== id);
+    const categories = this.state().filter(c => c.id !== id);
     this.saveCategories(categories);
     return true;
   }
 
-  /**
-   * Guardar categorías en el almacenamiento
-   */
   private saveCategories(categories: Category[]): void {
     this.storageService.setItem(this.CATEGORIES_KEY, categories);
-    this.categoriesSubject.next(categories);
+    this.state.set(categories);
   }
 }

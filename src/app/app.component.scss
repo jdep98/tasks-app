@@ -1,0 +1,41 @@
+.bottom-nav {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
+
+  .nav-icons {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    padding: 5px 0;
+    
+    ion-button {
+      margin: 0;
+      ion-icon {
+        font-size: 24px;
+      }
+    }
+  }
+
+  .spacer {
+    width: 60px; /* Space for the floating action button */
+  }
+}
+
+.fab-container {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+
+  .main-fab {
+    --box-shadow: 0 8px 25px rgba(0, 204, 230, 0.4);
+    width: 60px;
+    height: 60px;
+  }
+}

@@ -2,8 +2,11 @@ export interface Task {
   id: string;
   title: string;
   description?: string;
+  date: string;
+  time: string;
   completed: boolean;
   categoryId: string;
+  isImportant: boolean; // Managed by Remote Config
   createdAt: Date;
   updatedAt: Date;
 }

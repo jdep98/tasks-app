@@ -47,12 +47,13 @@ Prerrequisitos adicionales:
 
 Comandos:
 
-	ionic cordova platform add android
-	ionic cordova run android -l
+	npx cordova platform add android
+	npx cordova run android --device
+	ionic cordova run android -l --device --external
 
 Para generar build:
 
-	ionic cordova build android
+	npx cordova build android
 
 ### iOS (solo macOS)
 
@@ -63,12 +64,12 @@ Prerrequisitos adicionales:
 
 Comandos:
 
-	ionic cordova platform add ios
-	ionic cordova run ios -l
+	npx cordova platform add ios
+	npx cordova run ios -l
 
 Para generar build:
 
-	ionic cordova build ios
+	npx cordova build ios
 
 ## Limpieza de entorno si algo falla
 
