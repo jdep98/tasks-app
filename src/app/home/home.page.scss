@@ -58,11 +58,23 @@
 
 .category-card {
   background: white;
-  min-width: 130px;
   border-radius: 20px;
-  padding: 20px 15px;
-  text-align: center;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+  padding: 15px;
+  min-width: 120px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border 0.2s ease;
+  border: 2px solid transparent;
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &.active-category {
+    border-color: var(--ion-color-primary, #0ce7e7);
+    box-shadow: 0 10px 30px rgba(12, 231, 231, 0.3);
+    transform: translateY(-3px);
+  }
 
   .cat-icon {
     font-size: 32px;

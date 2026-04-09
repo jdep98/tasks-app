@@ -19,6 +19,37 @@
         font-size: 24px;
       }
     }
+
+    .notification-btn {
+      color: #999;
+      font-size: 26px;
+      margin: 0 10px;
+      position: relative;
+      overflow: visible;
+
+      &.ion-color-primary {
+        color: var(--ion-color-primary);
+      }
+    }
+
+    .urgent-badge {
+      position: absolute;
+      top: -2px;
+      right: 2px;
+      background: var(--ion-color-danger, #eb445a);
+      color: white;
+      font-size: 10px;
+      font-weight: bold;
+      border-radius: 50%;
+      min-width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 5px rgba(235, 68, 90, 0.4);
+      z-index: 10;
+      border: 2px solid white;
+    }
   }
 
   .spacer {

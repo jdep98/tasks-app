@@ -44,6 +44,7 @@ export class HomePage implements OnInit {
 
   public selectedTimeline = signal('Semanal');
   public timelines = ['Hoy', 'Semanal', 'Mensual', 'Anual'];
+  public selectedCategory = signal<string | null>(null);
 
   public userName = this.storageService.userName;
 
@@ -51,6 +52,7 @@ export class HomePage implements OnInit {
   public filteredTasks = computed(() => {
     const tasks = this.taskService.tasks();
     const filter = this.selectedTimeline();
+    const catFilter = this.selectedCategory();
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -74,6 +76,10 @@ export class HomePage implements OnInit {
       }
       taskDate.setHours(0, 0, 0, 0);
       const taskMillis = taskDate.getTime();
+
+      if (catFilter && task.categoryId !== catFilter) {
+        return false;
+      }
 
       switch (filter) {
         case 'Hoy':
@@ -104,6 +110,14 @@ export class HomePage implements OnInit {
 
   toggleTimeline(timeline: string) {
     this.selectedTimeline.set(timeline);
+  }
+
+  toggleCategoryFilter(categoryId: string) {
+    if (this.selectedCategory() === categoryId) {
+      this.selectedCategory.set(null);
+    } else {
+      this.selectedCategory.set(categoryId);
+    }
   }
 
   toggleTaskCompletion(taskId: string) {

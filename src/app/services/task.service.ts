@@ -13,6 +13,36 @@ export class TaskService {
   private state = signal<Task[]>([]);
   public tasks = computed(() => this.state());
 
+  public overdueTasks = computed(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayMillis = today.getTime();
+
+    return this.tasks().filter(task => {
+      if (task.completed) return false;
+      let taskDate = new Date(task.date);
+      if (isNaN(taskDate.getTime())) taskDate = new Date(task.createdAt);
+      taskDate.setHours(0, 0, 0, 0);
+      return taskDate.getTime() < todayMillis;
+    });
+  });
+
+  public todayTasks = computed(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayMillis = today.getTime();
+
+    return this.tasks().filter(task => {
+      if (task.completed) return false;
+      let taskDate = new Date(task.date);
+      if (isNaN(taskDate.getTime())) taskDate = new Date(task.createdAt);
+      taskDate.setHours(0, 0, 0, 0);
+      return taskDate.getTime() === todayMillis;
+    });
+  });
+
+  public urgentCount = computed(() => this.overdueTasks().length + this.todayTasks().length);
+
   constructor(private storageService: StorageService) {
     this.loadTasks();
   }

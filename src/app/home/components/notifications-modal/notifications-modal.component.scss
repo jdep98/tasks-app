@@ -1,0 +1,108 @@
+@import '../../../../theme/variables.scss';
+
+.main-bg {
+  --background: #f8f9fc;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+
+  ion-icon {
+    font-size: 64px;
+    color: #2dd36f;
+    opacity: 0.8;
+  }
+  
+  h3 {
+    margin-top: 15px;
+    font-weight: 600;
+    color: #333;
+  }
+}
+
+.alert-section {
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+  
+  &.overdue {
+    border-left: 5px solid var(--ion-color-danger, #eb445a);
+    .section-title ion-icon { color: var(--ion-color-danger, #eb445a); }
+  }
+
+  &.today {
+    border-left: 5px solid var(--ion-color-warning, #ffc409);
+    .section-title ion-icon { color: var(--ion-color-warning, #ffc409); }
+  }
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+
+  ion-icon {
+    font-size: 24px;
+    margin-right: 8px;
+  }
+
+  h2 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+    flex: 1;
+  }
+  
+  ion-badge {
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 12px;
+  }
+}
+
+.urgent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.urgent-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8f9fc;
+  padding: 12px 15px;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+
+  .card-info {
+    flex: 1;
+    
+    h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #333;
+      margin: 0 0 4px 0;
+    }
+
+    p {
+      font-size: 12px;
+      color: #666;
+      margin: 0;
+    }
+  }
+
+  ion-button {
+    --padding-start: 5px;
+    --padding-end: 5px;
+    margin: 0;
+    
+    ion-icon {
+      font-size: 28px;
+    }
+  }
+}

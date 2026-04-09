@@ -2,7 +2,9 @@ import { Component, inject } from '@angular/core';
 import { IonApp, IonRouterOutlet, IonFooter, IonToolbar, IonButton, IonIcon, IonFabButton, ModalController, AlertController } from '@ionic/angular/standalone';
 import { CreateTaskModalComponent } from './home/components/create-task-modal/create-task-modal.component';
 import { CategoriesModalComponent } from './home/components/categories-modal/categories-modal.component';
+import { NotificationsModalComponent } from './home/components/notifications-modal/notifications-modal.component';
 import { StorageService } from './services/storage.service';
+import { TaskService } from './services/task.service';
 import { addIcons } from 'ionicons';
 import { homeOutline, notificationsOutline, settingsOutline, personOutline, add } from 'ionicons/icons';
 
@@ -16,6 +18,7 @@ export class AppComponent {
   private modalCtrl = inject(ModalController);
   private alertCtrl = inject(AlertController);
   public storageService = inject(StorageService);
+  public taskService = inject(TaskService);
 
   constructor() {
     addIcons({ homeOutline, notificationsOutline, settingsOutline, personOutline, add });
@@ -35,6 +38,15 @@ export class AppComponent {
       component: CategoriesModalComponent,
       breakpoints: [0, 0.9, 1],
       initialBreakpoint: 0.9
+    });
+    return await modal.present();
+  }
+
+  async openNotificationsModal() {
+    const modal = await this.modalCtrl.create({
+      component: NotificationsModalComponent,
+      breakpoints: [0, 0.65, 1],
+      initialBreakpoint: 0.65
     });
     return await modal.present();
   }

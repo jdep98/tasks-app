@@ -10,7 +10,7 @@
 
     <div class="categories-slider">
       @for (category of categoryService.categories(); track category.id) {
-        <div class="category-card">
+        <div class="category-card" [class.active-category]="selectedCategory() === category.id" (click)="toggleCategoryFilter(category.id)">
           <ion-icon [name]="category.icon" [style.color]="category.color" class="cat-icon"></ion-icon>
           <h3>{{ category.name }}</h3>
           <p>{{ taskService.getTaskCountByCategory(category.id) }} Ítems</p>
