@@ -34,13 +34,13 @@
 
     <ion-modal trigger="date-trigger" [keepContentsMounted]="true">
       <ng-template>
-        <ion-datetime presentation="date" [min]="today" [(ngModel)]="dateValue"></ion-datetime>
+        <ion-datetime presentation="date" [min]="today" [(ngModel)]="dateValue" showDefaultButtons="true" doneText="Confirmar" cancelText="Atrás"></ion-datetime>
       </ng-template>
     </ion-modal>
 
     <ion-modal trigger="time-trigger" [keepContentsMounted]="true">
       <ng-template>
-        <ion-datetime presentation="time" [(ngModel)]="timeValue"></ion-datetime>
+        <ion-datetime presentation="time" [(ngModel)]="timeValue" showDefaultButtons="true" doneText="Confirmar" cancelText="Atrás"></ion-datetime>
       </ng-template>
     </ion-modal>
 

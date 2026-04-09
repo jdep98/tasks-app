@@ -78,13 +78,14 @@
 .icon-dot {
   background: #f8f9fc;
   color: #999;
+  border: 2px solid transparent;
   &.selected {
-    background: currentColor;
-    color: white !important; /* Forces the icon stroke to use background contrast (white) */
-    position: relative;
+    background: transparent;
+    border-color: currentColor;
+    transform: scale(1.1);
     
     ion-icon { 
-      color: white; 
+      color: currentColor; 
     }
   }
 }

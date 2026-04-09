@@ -61,18 +61,21 @@ export class AppComponent {
           name: 'name',
           type: 'text',
           placeholder: 'Escribe tu nombre',
-          value: currentName !== 'Parsley' ? currentName : ''
+          value: currentName !== '' ? currentName : '',
+          attributes: {
+            maxlength: 15
+          }
         }
       ],
       buttons: [
         { text: 'Cancelar', role: 'cancel' },
-        { 
-          text: 'Guardar', 
+        {
+          text: 'Guardar',
           handler: (data) => {
             if (data && data.name && data.name.trim().length > 0) {
               this.storageService.setUserName(data.name.trim());
             }
-          } 
+          }
         }
       ]
     });
