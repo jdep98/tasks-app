@@ -2,12 +2,16 @@ import { Component, ChangeDetectionStrategy, inject, Input, OnInit } from '@angu
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-  IonContent, IonIcon, IonButton, IonHeader, IonToolbar, IonTitle, IonFooter,
-  IonItem, IonLabel, IonInput, IonSelect, IonSelectOption, IonTextarea,
-  IonToggle, IonButtons, ModalController, IonDatetime, IonDatetimeButton, IonModal
+  IonContent, IonIcon, IonButton, IonHeader, IonToolbar, IonTitle,
+  IonItem, IonLabel, IonTextarea, IonToggle, IonButtons,
+  ModalController, IonDatetime, IonModal
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { timeOutline, calendarOutline, starOutline, closeCircle } from 'ionicons/icons';
+import {
+  timeOutline, calendarOutline, starOutline, closeCircle,
+  cartOutline, calculatorOutline, colorPaletteOutline,
+  restaurantOutline, gameControllerOutline, musicalNotesOutline, folderOutline
+} from 'ionicons/icons';
 import { TaskService } from '../../../services/task.service';
 import { CategoryService } from '../../../services/category.service';
 import { FirebaseConfigService } from '../../../services/firebase-config.service';
@@ -21,7 +25,7 @@ import { FirebaseConfigService } from '../../../services/firebase-config.service
   imports: [
     CommonModule, FormsModule,
     IonContent, IonIcon, IonButton, IonHeader, IonToolbar, IonTitle,
-    IonItem, IonLabel, IonSelect, IonSelectOption, IonTextarea,
+    IonItem, IonLabel, IonTextarea,
     IonToggle, IonButtons, IonDatetime, IonModal
   ],
 })
@@ -51,7 +55,19 @@ export class CreateTaskModalComponent implements OnInit {
   }
 
   constructor() {
-    addIcons({ timeOutline, calendarOutline, starOutline, closeCircle });
+    addIcons({
+      timeOutline,
+      calendarOutline,
+      starOutline,
+      closeCircle,
+      cartOutline,
+      calculatorOutline,
+      colorPaletteOutline,
+      restaurantOutline,
+      gameControllerOutline,
+      musicalNotesOutline,
+      folderOutline
+    });
   }
 
   ngOnInit() {
@@ -78,6 +94,11 @@ export class CreateTaskModalComponent implements OnInit {
         this.timeValue = fakeDate.toISOString();
       }
     }
+
+    // If the feature flag is disabled, force important to false.
+    if (!this.firebaseService.enableImportantMarker()) {
+      this.isImportant = false;
+    }
   }
 
   cancel() {
@@ -89,6 +110,7 @@ export class CreateTaskModalComponent implements OnInit {
 
     const timeObj = new Date(this.timeValue);
     const formattedTime = timeObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const effectiveImportant = this.firebaseService.enableImportantMarker() ? this.isImportant : false;
 
     if (this.task) {
       this.taskService.updateTask(this.task.id, {
@@ -96,7 +118,7 @@ export class CreateTaskModalComponent implements OnInit {
         date: this.dateValue,
         time: formattedTime,
         categoryId: this.categoryId,
-        isImportant: this.isImportant
+        isImportant: effectiveImportant
       });
     } else {
       this.taskService.createTask(
@@ -105,7 +127,7 @@ export class CreateTaskModalComponent implements OnInit {
         this.dateValue,
         formattedTime,
         this.categoryId,
-        this.isImportant
+        effectiveImportant
       );
     }
 

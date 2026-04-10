@@ -42,13 +42,23 @@
       </ng-template>
     </ion-modal>
 
-    <ion-item lines="none" class="info-item margin-top">
-      <ion-select [(ngModel)]="categoryId" interface="popover" placeholder="Categoría" class="cat-select">
+    <div class="categories-section margin-top">
+      <p class="section-title">Categoría</p>
+      <div class="categories-slider" role="listbox" aria-label="Seleccionar categoría">
         @for(cat of categoryService.categories(); track cat.id) {
-        <ion-select-option [value]="cat.id">{{ cat.name }}</ion-select-option>
+        <button
+          type="button"
+          class="category-chip"
+          [class.active]="categoryId === cat.id"
+          (click)="categoryId = cat.id"
+          [attr.aria-selected]="categoryId === cat.id"
+        >
+          <ion-icon [name]="cat.icon || 'folder-outline'" [style.color]="cat.color || '#0ce7e7'"></ion-icon>
+          <span>{{ cat.name }}</span>
+        </button>
         }
-      </ion-select>
-    </ion-item>
+      </div>
+    </div>
 
     @if (firebaseService.enableImportantMarker()) {
     <ion-item lines="none" class="info-item margin-top">

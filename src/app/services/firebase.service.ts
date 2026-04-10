@@ -1,60 +1,104 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
+import { getApp, getApps, initializeApp, type FirebaseApp } from 'firebase/app';
+import { fetchAndActivate, getBoolean, getRemoteConfig, type RemoteConfig } from 'firebase/remote-config';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FirebaseService {
-  private remoteConfigSubject = new BehaviorSubject<any>({});
-  public remoteConfig$: Observable<any> = this.remoteConfigSubject.asObservable();
+  private app: FirebaseApp | null = null;
+  private remoteConfig: RemoteConfig | null = null;
 
-  // Simular un feature flag para demostración
-  private featureFlagsSubject = new BehaviorSubject<{ [key: string]: boolean }>({
-    advancedCategories: false,
-    experimentalFeatures: false,
-    tasksLimitByCategory: false
-  });
-  public featureFlags$: Observable<{ [key: string]: boolean }> = this.featureFlagsSubject.asObservable();
+  public enableImportantMarker = signal<boolean>(true);
+  public remoteConfigReady = signal<boolean>(false);
+  public remoteConfigError = signal<string | null>(null);
 
   constructor() {
-    this.initializeFirebase();
+    void this.initializeFirebase();
   }
 
-  /**
-   * Inicializar Firebase (configuración posterior con keys reales)
-   */
-  private initializeFirebase(): void {
-    // Aquí se configurará Firebase con credenciales reales
-    console.log('Firebase service initialized');
+  private hasValidFirebaseConfig(): boolean {
+    const config = environment.firebase as {
+      apiKey?: string;
+      authDomain?: string;
+      projectId?: string;
+      storageBucket?: string;
+      messagingSenderId?: string;
+      appId?: string;
+    };
+
+    return Boolean(
+      config?.apiKey &&
+      config.apiKey !== 'AIzaSyDummyKey-EmptyForNow' &&
+      config?.projectId &&
+      config.projectId !== 'dummy-project'
+    );
   }
 
-  /**
-   * Obtener el valor de un feature flag
-   */
+  private hasWebAppId(): boolean {
+    const appId = (environment.firebase as { appId?: string })?.appId ?? '';
+    return appId.includes(':web:');
+  }
+
+  private async initializeFirebase(): Promise<void> {
+    if (!this.hasValidFirebaseConfig()) {
+      this.remoteConfigReady.set(true);
+      this.enableImportantMarker.set(true);
+      this.remoteConfigError.set('Firebase no configurado: faltan credenciales reales en environment.');
+      return;
+    }
+
+    if (!this.hasWebAppId()) {
+      this.remoteConfigReady.set(true);
+      this.enableImportantMarker.set(true);
+      this.remoteConfigError.set('Config de Firebase inválida para Web: usa appId de tipo :web: desde Firebase Console.');
+      console.warn('Firebase config uses a non-web appId. Create a Web App in Firebase and replace environment.firebase.appId.');
+      return;
+    }
+
+    try {
+      this.app = getApps().length > 0 ? getApp() : initializeApp(environment.firebase);
+      this.remoteConfig = getRemoteConfig(this.app);
+
+      this.remoteConfig.settings.minimumFetchIntervalMillis = environment.production ? 3600000 : 0;
+      this.remoteConfig.defaultConfig = {
+        enable_important_marker: 'true'
+      };
+
+      await fetchAndActivate(this.remoteConfig);
+      this.enableImportantMarker.set(getBoolean(this.remoteConfig, 'enable_important_marker'));
+      this.remoteConfigReady.set(true);
+      this.remoteConfigError.set(null);
+    } catch (error) {
+      console.warn('Firebase Remote Config failed to initialize. Using default values.', error);
+      this.enableImportantMarker.set(true);
+      this.remoteConfigReady.set(true);
+      this.remoteConfigError.set(error instanceof Error ? error.message : 'Unknown Firebase error');
+    }
+  }
+
   getFeatureFlag(flagName: string): boolean {
-    return this.featureFlagsSubject.value[flagName] || false;
+    if (flagName === 'enable_important_marker') {
+      return this.enableImportantMarker();
+    }
+
+    return false;
   }
 
-  /**
-   * Activar/desactivar un feature flag (para pruebas locales)
-   */
   setFeatureFlag(flagName: string, value: boolean): void {
-    const flags = { ...this.featureFlagsSubject.value };
-    flags[flagName] = value;
-    this.featureFlagsSubject.next(flags);
+    if (flagName === 'enable_important_marker') {
+      this.enableImportantMarker.set(value);
+    }
   }
 
-  /**
-   * Obtener todos los feature flags
-   */
   getFeatureFlags(): { [key: string]: boolean } {
-    return this.featureFlagsSubject.value;
+    return {
+      enable_important_marker: this.enableImportantMarker()
+    };
   }
 
-  /**
-   * Obtener Remote Config (cuando esté integrado Firebase)
-   */
-  getRemoteConfig(): any {
-    return this.remoteConfigSubject.value;
+  getRemoteConfig(): RemoteConfig | null {
+    return this.remoteConfig;
   }
 }

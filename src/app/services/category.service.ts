@@ -9,14 +9,13 @@ import { v4 as uuidv4 } from 'uuid';
 export class CategoryService {
   private readonly CATEGORIES_KEY = 'categories';
   
-  // Default categories matching Figma design
+  
   private readonly DEFAULT_CATEGORIES: Category[] = [
     { id: 'cat-shopping', name: 'Compras', color: '#0ce7e7', icon: 'cart-outline', createdAt: new Date(), updatedAt: new Date() },
     { id: 'cat-work', name: 'Trabajo', color: '#6666ff', icon: 'calculator-outline', createdAt: new Date(), updatedAt: new Date() },
     { id: 'cat-hobbies', name: 'Pasatiempos', color: '#ff6666', icon: 'color-palette-outline', createdAt: new Date(), updatedAt: new Date() },
     { id: 'cat-family', name: 'Cena Familiar', color: '#6666ff', icon: 'restaurant-outline', createdAt: new Date(), updatedAt: new Date() },
     { id: 'cat-gaming', name: 'Videojuegos', color: '#ff6666', icon: 'game-controller-outline', createdAt: new Date(), updatedAt: new Date() },
-    { id: 'cat-swimming', name: 'Natación', color: '#9933ff', icon: 'water-outline', createdAt: new Date(), updatedAt: new Date() },
     { id: 'cat-entertainment', name: 'Entretenimiento', color: '#ff33cc', icon: 'musical-notes-outline', createdAt: new Date(), updatedAt: new Date() }
   ];
 

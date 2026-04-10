@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class StorageService {
   private readonly STORAGE_PREFIX = 'tasks_app_';
 
-  public userName = signal('Parsley');
+  public userName = signal('');
 
   constructor() {
     this.init();

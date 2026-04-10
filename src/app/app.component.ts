@@ -6,7 +6,7 @@ import { NotificationsModalComponent } from './home/components/notifications-mod
 import { StorageService } from './services/storage.service';
 import { TaskService } from './services/task.service';
 import { addIcons } from 'ionicons';
-import { homeOutline, notificationsOutline, settingsOutline, personOutline, add } from 'ionicons/icons';
+import { homeOutline, notificationsOutline, gridOutline, personOutline, add } from 'ionicons/icons';
 
 @Component({
   selector: 'app-root',
@@ -21,7 +21,7 @@ export class AppComponent {
   public taskService = inject(TaskService);
 
   constructor() {
-    addIcons({ homeOutline, notificationsOutline, settingsOutline, personOutline, add });
+    addIcons({ homeOutline, notificationsOutline, gridOutline, personOutline, add });
   }
 
   async openCreateTaskModal() {
