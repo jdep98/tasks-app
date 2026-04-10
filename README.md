@@ -71,6 +71,59 @@ Para generar build:
 
 	npx cordova build ios
 
+## Generar APK e IPA (release)
+
+### APK (Android)
+
+1. Asegura la plataforma Android instalada:
+
+	npx cordova platform add android
+
+2. Genera el APK de release:
+
+	npx cordova build android --release
+
+3. El APK sin firmar queda normalmente en:
+
+	platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk
+
+4. Firma el APK con tu keystore (ejemplo):
+
+	"%JAVA_HOME%\\bin\\jarsigner" -verbose -sigalg SHA256withRSA -digestalg SHA-256 -keystore mi-keystore.jks platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk mi_alias
+
+5. Optimiza/alinea el APK firmado (ejemplo):
+
+	zipalign -v 4 platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk app-release.apk
+
+### IPA (iOS)
+
+1. Asegura la plataforma iOS instalada (solo macOS):
+
+	npx cordova platform add ios
+
+2. Genera el proyecto iOS en modo release:
+
+	npx cordova build ios --release
+
+3. Abre el workspace en Xcode:
+
+	platforms/ios/*.xcworkspace
+
+4. En Xcode, configura Signing & Capabilities con tu Team/Provisioning Profile.
+
+5. Crea el archivo IPA desde Xcode:
+
+	Product > Archive > Distribute App
+
+6. Alternativa por línea de comandos (requiere un archivo ExportOptions.plist):
+
+	xcodebuild -workspace platforms/ios/App.xcworkspace -scheme App -configuration Release -archivePath build/App.xcarchive archive
+	xcodebuild -exportArchive -archivePath build/App.xcarchive -exportPath build/ios -exportOptionsPlist ExportOptions.plist
+
+7. El IPA exportado queda normalmente en:
+
+	build/ios
+
 ## Limpieza de entorno si algo falla
 
 Si tienes errores de caché o resolución de dependencias, ejecuta:
