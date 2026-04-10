@@ -21,7 +21,7 @@ Comando para instalar CLIs globales:
 
 ### 2. Clonar repositorio
 
-	git clone URL_DEL_REPOSITORIO
+	git clone https://github.com/jdep98/tasks-app.git
 	cd tasks-app
 
 ### 3. Instalar dependencias
@@ -77,21 +77,4 @@ Si tienes errores de caché o resolución de dependencias, ejecuta:
 
 	rm -rf node_modules package-lock.json .angular/cache
 	npm install
-
-## Firebase y Remote Config
-
-Pendiente de integración real en este estado del proyecto. Para terminar la configuración:
-
-1. Crear proyecto en Firebase.
-2. Registrar app web y obtener credenciales.
-3. Agregar configuración en archivos de entorno.
-4. Configurar Remote Config con el feature flag requerido.
-
-## Checklist rápida de verificación
-
-- Home abre con el diseño del prototipo.
-- CRUD de tareas funciona.
-- CRUD de categorías funciona.
-- Filtro por categoría funciona.
-- Feature flag cambia comportamiento visible.
 
